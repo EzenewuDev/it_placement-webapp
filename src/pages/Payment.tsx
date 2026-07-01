@@ -31,6 +31,7 @@ const Payment = ({ cartItems = [], clearCart }: PaymentProps) => {
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'bank' | 'ussd'>('card');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [transactionId, setTransactionId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     cardNumber: '',
     cardName: '',
@@ -52,6 +53,7 @@ const Payment = ({ cartItems = [], clearCart }: PaymentProps) => {
     await new Promise(resolve => setTimeout(resolve, 3000));
     
     setIsProcessing(false);
+    setTransactionId(`LCU-${Date.now()}`);
     setIsComplete(true);
     
     if (clearCart) {
@@ -86,7 +88,7 @@ const Payment = ({ cartItems = [], clearCart }: PaymentProps) => {
             Your application has been submitted successfully.
           </p>
           <p className="text-gray-500 text-sm mb-8">
-            Transaction ID: <span className="font-mono text-[#8b6d4b]">LCU-{Date.now()}</span>
+            Transaction ID: <span className="font-mono text-[#8b6d4b]">{transactionId}</span>
           </p>
           <div className="bg-emerald-50 rounded-xl p-4 mb-8">
             <p className="text-emerald-700 text-sm">

@@ -18,6 +18,13 @@ import Signup from './pages/Signup';
 import Payment from './pages/Payment';
 import Loader from './components/ui/Loader';
 import BackToTop from './components/ui/BackToTop';
+import { AdminProvider } from './context/AdminContext';
+import AdminLayout from './layouts/AdminLayout';
+import AdminDashboard from './pages/admin/Dashboard';
+import StudentsPage from './pages/admin/Students';
+import CompaniesPage from './pages/admin/Companies';
+import PlacementsPage from './pages/admin/Placements';
+import ActivityLogsPage from './pages/admin/ActivityLogs';
 
 interface CartItem {
   id: number;
@@ -136,6 +143,29 @@ function App() {
                 clearCart={handleClearCart}
               />
             } 
+          />
+          
+          {/* Admin Routes */}
+          <Route
+            path="/admin/*"
+            element={
+              isLoggedIn && userType === 'admin' ? (
+                <AdminProvider>
+                  <AdminLayout onLogout={handleLogout}>
+                    <Routes>
+                      <Route path="/" element={<AdminDashboard />} />
+                      <Route path="/students" element={<StudentsPage />} />
+                      <Route path="/companies" element={<CompaniesPage />} />
+                      <Route path="/placements" element={<PlacementsPage />} />
+                      <Route path="/activity-logs" element={<ActivityLogsPage />} />
+                      <Route path="*" element={<Navigate to="/admin" replace />} />
+                    </Routes>
+                  </AdminLayout>
+                </AdminProvider>
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
           
           {/* Home Route */}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, GraduationCap, Building2, UserCog } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, GraduationCap, Building2, UserCog, AlertCircle } from 'lucide-react';
+import { apiService } from '../services/adminApi';
 
 interface LoginProps {
   onLogin?: (userType: string) => void;
@@ -16,19 +17,48 @@ const Login = ({ onLogin }: LoginProps) => {
     rememberMe: false,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
     
-    // Simulate login API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    setIsLoading(false);
-    if (onLogin) {
-      onLogin(userType);
+    try {
+      // Try real API login first
+      const response = await apiService.login(formData.email, formData.password, userType);
+      apiService.setToken(response.access_token);
+      
+      setIsLoading(false);
+      if (onLogin) {
+        onLogin(userType);
+      }
+      
+      // Redirect admin to admin dashboard, others to home
+      if (userType === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    } catch {
+      // Fallback to mock login if API fails
+      console.log("API login failed, using fallback login");
+      
+      // Still simulate login for demo purposes
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setIsLoading(false);
+      if (onLogin) {
+        onLogin(userType);
+      }
+      
+      // Redirect admin to admin dashboard, others to home
+      if (userType === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     }
-    navigate('/');
   };
 
   const userTypes = [
@@ -100,6 +130,21 @@ const Login = ({ onLogin }: LoginProps) => {
               <p className="text-gray-500">
                 Choose your account type to continue
               </p>
+            </div>
+
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
+                <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                <p className="text-red-700 text-sm">{error}</p>
+              </div>
+            )}
+
+            {/* Demo Info */}
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+              <p className="text-blue-700 text-sm font-medium mb-1">Demo Credentials:</p>
+              <p className="text-blue-600 text-xs">Admin: admin@lcu.edu.ng / admin123</p>
+              <p className="text-blue-600 text-xs">Students: [student email] / student123</p>
             </div>
 
             {/* User Type Selector */}
