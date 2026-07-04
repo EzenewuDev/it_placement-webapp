@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useAdmin } from "../../context/AdminContext";
-import { Activity, Filter, User, Briefcase, Users, Building2, TrendingUp } from "lucide-react";
+import { Activity, User, Briefcase, Users, Building2, TrendingUp } from "lucide-react";
 
 const ActivityLogsPage: React.FC = () => {
   const { isLoading, activityLogs, loadActivityLogs } = useAdmin();

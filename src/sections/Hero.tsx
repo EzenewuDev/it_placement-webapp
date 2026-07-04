@@ -124,7 +124,7 @@ const Hero = () => {
         >
           {heroConfig.ctaPrimaryText && (
             <Link
-              to="/signup"
+              to="/apply"
               className="group px-6 sm:px-10 py-3.5 sm:py-4 bg-gradient-to-r from-[#8b6d4b] to-[#6d5639] text-white font-medium tracking-wide text-sm sm:text-base rounded-full hover:shadow-xl hover:shadow-[#8b6d4b]/30 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-2"
             >
               {heroConfig.ctaPrimaryText}
@@ -144,7 +144,7 @@ const Hero = () => {
 
         {/* Stats */}
         <div
-          className={`mt-12 sm:mt-16 grid grid-cols-3 gap-4 sm:gap-8 transition-all duration-1000 ${
+          className={`mt-12 sm:mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 transition-all duration-1000 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
           style={{ transitionDelay: '1100ms' }}

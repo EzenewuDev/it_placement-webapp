@@ -6,7 +6,6 @@ import {
   Building2,
   Briefcase,
   Activity,
-  Settings,
   LogOut,
   Menu,
   X,

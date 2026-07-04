@@ -16,6 +16,8 @@ import Footer from './sections/Footer';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Payment from './pages/Payment';
+import Apply from './pages/Apply';
+import CompanyDashboard from './pages/company/Dashboard';
 import Loader from './components/ui/Loader';
 import BackToTop from './components/ui/BackToTop';
 import { AdminProvider } from './context/AdminContext';
@@ -25,6 +27,7 @@ import StudentsPage from './pages/admin/Students';
 import CompaniesPage from './pages/admin/Companies';
 import PlacementsPage from './pages/admin/Placements';
 import ActivityLogsPage from './pages/admin/ActivityLogs';
+import { clearPortalSession, getPortalSession, setPortalSession } from './services/companyPortal';
 
 interface CartItem {
   id: number;
@@ -52,8 +55,9 @@ const HomePage = ({ onAddToCart }: { onAddToCart: (product: Product) => void }) 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userType, setUserType] = useState<string>('');
+  const [portalSession] = useState(() => getPortalSession());
+  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(portalSession));
+  const [userType, setUserType] = useState<string>(portalSession?.userType ?? '');
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -105,12 +109,14 @@ function App() {
     setCartItems([]);
   }, []);
 
-  const handleLogin = useCallback((type: string) => {
+  const handleLogin = useCallback((type: string, email: string) => {
+    setPortalSession({ userType: type as 'student' | 'company' | 'admin', email });
     setIsLoggedIn(true);
     setUserType(type);
   }, []);
 
   const handleLogout = useCallback(() => {
+    clearPortalSession();
     setIsLoggedIn(false);
     setUserType('');
   }, []);
@@ -132,6 +138,21 @@ function App() {
           <Route 
             path="/signup" 
             element={<Signup onSignup={handleLogin} />} 
+          />
+          <Route
+            path="/apply"
+            element={<Apply />}
+          />
+
+          <Route
+            path="/company/dashboard"
+            element={
+              isLoggedIn && userType === 'company' ? (
+                <CompanyDashboard />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
           />
           
           {/* Payment Route */}

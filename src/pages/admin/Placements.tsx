@@ -3,7 +3,7 @@ import { useAdmin } from "../../context/AdminContext";
 import { Briefcase, Search, Send, CheckCircle, Clock, AlertCircle, Filter } from "lucide-react";
 
 const PlacementsPage: React.FC = () => {
-  const { isLoading, placements, loadPlacements, updatePlacement, forwardProfile, bulkForward, students, companies, loadStudents, loadCompanies, findMatches, autoMatch } = useAdmin();
+  const { isLoading, placements, loadPlacements, forwardProfile, bulkForward, students, companies, loadStudents, loadCompanies, findMatches, autoMatch } = useAdmin();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [selectedPlacements, setSelectedPlacements] = useState<number[]>([]);
@@ -236,23 +236,30 @@ const PlacementsPage: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {placement.match_score !== null ? (
+                      {placement.match_score != null ? (
                         <div className="flex items-center gap-2">
+                          {(() => {
+                            const matchScore = placement.match_score ?? 0;
+                            return (
+                              <>
                           <div className="w-20 bg-gray-200 rounded-full h-2">
                             <div
                               className={`h-2 rounded-full ${
-                                placement.match_score >= 70
+                                matchScore >= 70
                                   ? "bg-green-500"
-                                  : placement.match_score >= 50
+                                  : matchScore >= 50
                                   ? "bg-amber-500"
                                   : "bg-red-500"
                               }`}
-                              style={{ width: `${placement.match_score}%` }}
+                              style={{ width: `${matchScore}%` }}
                             ></div>
                           </div>
                           <span className="text-sm font-medium text-gray-900">
-                            {placement.match_score.toFixed(1)}%
+                            {matchScore.toFixed(1)}%
                           </span>
+                              </>
+                            );
+                          })()}
                         </div>
                       ) : (
                         "-"

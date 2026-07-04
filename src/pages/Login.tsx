@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, GraduationCap, Building2, UserCog, AlertCircle } from 'lucide-react';
 import { apiService } from '../services/adminApi';
+import { setPortalSession } from '../services/companyPortal';
 
 interface LoginProps {
-  onLogin?: (userType: string) => void;
+  onLogin?: (userType: string, email: string) => void;
 }
 
 const Login = ({ onLogin }: LoginProps) => {
@@ -28,15 +29,18 @@ const Login = ({ onLogin }: LoginProps) => {
       // Try real API login first
       const response = await apiService.login(formData.email, formData.password, userType);
       apiService.setToken(response.access_token);
+      setPortalSession({ userType, email: formData.email });
       
       setIsLoading(false);
       if (onLogin) {
-        onLogin(userType);
+        onLogin(userType, formData.email);
       }
       
-      // Redirect admin to admin dashboard, others to home
+      // Redirect each user type to its own destination
       if (userType === 'admin') {
         navigate('/admin');
+      } else if (userType === 'company') {
+        navigate('/company/dashboard');
       } else {
         navigate('/');
       }
@@ -46,15 +50,18 @@ const Login = ({ onLogin }: LoginProps) => {
       
       // Still simulate login for demo purposes
       await new Promise(resolve => setTimeout(resolve, 1000));
+      setPortalSession({ userType, email: formData.email });
       
       setIsLoading(false);
       if (onLogin) {
-        onLogin(userType);
+        onLogin(userType, formData.email);
       }
       
-      // Redirect admin to admin dashboard, others to home
+      // Redirect each user type to its own destination
       if (userType === 'admin') {
         navigate('/admin');
+      } else if (userType === 'company') {
+        navigate('/company/dashboard');
       } else {
         navigate('/');
       }

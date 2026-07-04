@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState } from "react";
+import type { ReactNode } from "react";
 import { apiService } from "../services/adminApi";
 import type { Student, Company, Placement, ActivityLog, DashboardStats, MatchingResult } from "../services/adminApi";
 
@@ -110,6 +111,27 @@ const mockStudents: Student[] = [
 ];
 
 const mockCompanies: Company[] = [
+  {
+    id: 0,
+    user_id: 10,
+    company_name: "admingreat and Co",
+    industry: "Technology",
+    location: "Lagos",
+    description: "Internal company account used for lecturer-submitted internship applications.",
+    website: "https://admingreat.co",
+    contact_person: "Admin Great",
+    contact_email: "hello@admingreat.co",
+    contact_phone: "+234 800 000 0000",
+    is_verified: true,
+    user: {
+      id: 10,
+      email: "hello@admingreat.co",
+      first_name: "Admin",
+      last_name: "Great",
+      phone: "+234 800 000 0000",
+    },
+    created_at: new Date().toISOString(),
+  },
   {
     id: 1,
     user_id: 6,

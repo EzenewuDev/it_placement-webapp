@@ -12,6 +12,7 @@ import {
   Calendar,
   Hash
 } from 'lucide-react';
+import { setApplicationAccessGranted } from '../services/companyPortal';
 
 interface CartItem {
   id: number;
@@ -55,6 +56,7 @@ const Payment = ({ cartItems = [], clearCart }: PaymentProps) => {
     setIsProcessing(false);
     setTransactionId(`LCU-${Date.now()}`);
     setIsComplete(true);
+    setApplicationAccessGranted(true);
     
     if (clearCart) {
       clearCart();

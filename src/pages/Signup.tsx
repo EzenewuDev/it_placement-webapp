@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, GraduationCap, Building2, UserCog, Phone, MapPin, Check } from 'lucide-react';
+import { setPortalSession } from '../services/companyPortal';
 
 interface SignupProps {
-  onSignup?: (userType: string) => void;
+  onSignup?: (userType: string, email: string) => void;
 }
 
 const Signup = ({ onSignup }: SignupProps) => {
@@ -37,10 +38,17 @@ const Signup = ({ onSignup }: SignupProps) => {
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     setIsLoading(false);
+    setPortalSession({ userType, email: formData.email });
     if (onSignup) {
-      onSignup(userType);
+      onSignup(userType, formData.email);
     }
-    navigate('/');
+    if (userType === 'company') {
+      navigate('/company/dashboard');
+    } else if (userType === 'admin') {
+      navigate('/admin');
+    } else {
+      navigate('/');
+    }
   };
 
   const userTypes = [
